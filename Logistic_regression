@@ -1,0 +1,166 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMLDliCAE8XafpYwt5GGEEj",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/FaYMan2/Models-from-scratch/blob/main/Logistic_regression\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 4,
+      "metadata": {
+        "id": "SkpCmBq3isRD"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import pandas as pd"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "## This notebook we will be creating a Logistic Regression model and give a breif explaination of each step\n",
+        "\n",
+        "class Logistic_Regressor:\n",
+        "\n",
+        "  # Creating a constructor/initialisation function to pass parameters such as Number of epochs and Learning rate\n",
+        "  def __init__(self,maxEpochs = 1000,Learning_rate = 0.001,threshold = 0.5):\n",
+        "    self.weights = None\n",
+        "    self.C = None\n",
+        "    self.Epochs = maxEpochs\n",
+        "    self.LR = Learning_rate\n",
+        "    self.LOSS = []\n",
+        "    self.threshold = threshold\n",
+        "\n",
+        "\n",
+        "  # The sigmoid function is used to map probability to 0 or 1 (nearly close),\n",
+        "  #  that enables the model to perform binary classification\n",
+        "  # The sigmoid function is represented as s(x) = L / 1 - e ^ -x\n",
+        "  def sigmoid(self,x):\n",
+        "    return 1 / (1 + np.exp(-x))\n",
+        "\n",
+        "  # The cross entropy loss function is used to calculate loss at each step\n",
+        "  # the function in our case can be defined as  Loss = -[y_true * log(y_pred) + (1 - y_true) * log(1 - y_pred)]\n",
+        "  def CrossEntropyLoss(self,y_pred,y_true):\n",
+        "    return - (y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))\n",
+        "\n",
+        "  # This function is used to get predictions for feeding into the model learning process\n",
+        "  # NOTE : Not to be used outside class ie not be called using class object\n",
+        "  def get_pred(self,X):\n",
+        "    pred = np.dot(X,self.weights) + self.C\n",
+        "    probability = sigmoid(pred)\n",
+        "    return probability\n",
+        "\n",
+        "  def Fit(self,X,y):\n",
+        "    # Getting the number of samples and number of features from the input data\n",
+        "    sample_count,feature_count = X.shape\n",
+        "\n",
+        "    # Setting up / Initialising the parameters before training\n",
+        "    self.weights = np.zeros(feature_count)\n",
+        "    self.C = 0\n",
+        "\n",
+        "    for i in range(self.Epochs):\n",
+        "      # getting predictions for comparison\n",
+        "      y_pred = get_pred(X)\n",
+        "\n",
+        "      # Derivative of weights and Bias term (C)\n",
+        "      # In gradient descent derivative of loss function is calculated and then divided by number of samples\n",
+        "      # for weights derivative = (1/n) * X(y_pred - y_true)\n",
+        "      # for bias term (C) derivative = (1/n) * (y_pred - y_true)\n",
+        "      weight_derivative = (1/sample_count) * np.dot((y_pred - y),X.T)\n",
+        "      C_derivative = (1/sample_count) * np.sum(y_pred - y)\n",
+        "\n",
+        "      loss = CrossEntropyLoss(y_pred,y)\n",
+        "      self.LOSS.append(loss)\n",
+        "\n",
+        "      # In gradient descent algorithm\n",
+        "      # K_+1 = K - Learning rate * derivative(Loss Function)\n",
+        "      self.weights -= self.LR * weight_derivative\n",
+        "      self.C -= self.LR * C_derivative\n",
+        "\n",
+        "\n",
+        "\n",
+        "    # Function to get predictions from fitted model\n",
+        "    # Note : Not to be called before fitting with training data (will give wrong outputs)\n",
+        "    def predict(self,X):\n",
+        "      pred = np.dot(X,self.weights) + self.C\n",
+        "      probability = sigmoid(pred)\n",
+        "      predictions = [1 if i > self.threshold else 0 for i in probability]\n",
+        "      return predictions"
+      ],
+      "metadata": {
+        "id": "-683oAJzizN-"
+      },
+      "execution_count": 10,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "xI4oVESJizkG"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "mnO4wBLtnKe_"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "CINK1N-fiz10"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "aOa09m9Niz7N"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "OFhGdnxJiz_9"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
